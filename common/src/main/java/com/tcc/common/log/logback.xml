@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- logback整合日志-->
+<!-- 
+	1.必要jar
+		logback-access-1.1.2.jar
+		logback-classic-1.1.2.jar
+		logback-core-1.1.2.jar
+		slf4j-api-1.7.7.jar
+		slf4j-jdk14-1.7.7.jar
+ -->
+<!-- 
+	2.移除commons-logging、log4j 
+-->
+<!-- 	
+	3.所需适配器jar
+		jcl-over-slf4j-1.7.7.jar 
+		jul-to-slf4j-1.7.7.jar	必需在代码中调用SLF4JBridgeHandler.install();
+		log4j-over-slf4j-1.7.7.jar 
+-->
+<!-- 
+	4.
+		<logger>节点设置指定的logger
+		<root>节点设置全局的logger
+ -->
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+	<property resource="/log/log-${spring.profiles.active}.properties" />
+	<contextName>${CONTEXT_NAME}</contextName>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{dd HH:mm:ss.SSS} %-5level] [%5.12thread] %logger{0}:%L %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ***************************************************************** -->
+	<!-- LOGGERS -->
+	<!-- ***************************************************************** -->
+
+	<appender name="INFO-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/${CONTEXT_NAME}-info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${LOG_PATH}/${CONTEXT_NAME}-info.log.%d{yyyy-MM-dd}.%i
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10240MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{dd HH:mm:ss.SSS} %-5level] [%5.12thread] %logger{0}:%L %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="OPERATE-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/${CONTEXT_NAME}-operate.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${LOG_PATH}/${CONTEXT_NAME}-operate.log.%d{yyyy-MM-dd}.%i
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10240MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{dd HH:mm:ss.SSS}]%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ERROR-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/${CONTEXT_NAME}-error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${LOG_PATH}/${CONTEXT_NAME}-error.log.%d{yyyy-MM-dd}.%i
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10240MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>[%d{dd HH:mm:ss.SSS} %-5level] [%5.12thread] %logger{0}:%L %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="ASYNC-INFO-APPENDER" class="com.tcc.common.log.LogbackAsyncAppender">
+		<appender-ref ref="INFO-APPENDER" />
+	</appender>
+	
+	<logger name="com.tcc" additivity="false" level="INFO">
+		<appender-ref ref="ASYNC-INFO-APPENDER" />
+	</logger>
+	
+	<!-- 操作日志 -->
+	<logger name="operate" additivity="false" level="INFO">
+		<appender-ref ref="OPERATE-APPENDER" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="ASYNC-INFO-APPENDER" />
+		<appender-ref ref="ERROR-APPENDER" />
+		<!-- 打印控制台 -->
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

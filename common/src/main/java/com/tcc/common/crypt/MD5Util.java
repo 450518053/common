@@ -1,4 +1,4 @@
-package com.tcc.util;
+package com.tcc.common.crypt;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,17 +10,20 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
-/**                    
+/**
+ * 
  * @Filename MD5Util.java
  *
  * @Description md5算法工具类
  *
- * @author tan 2015-9-29
+ * @author tan 2015年10月28日
+ *
+ * @email 450518053@qq.com
  *
  */
 public class MD5Util {
 	
-	static MessageDigest	md	= null;
+	static MessageDigest md = null;
 	
 	static {
 		try {
@@ -42,7 +45,7 @@ public class MD5Util {
 			fis = new FileInputStream(f);
 			//每次100KB
 			byte[] buffer = new byte[102400];
-			int length;
+			int length = -1;
 			while ((length = fis.read(buffer)) != -1) {
 				md.update(buffer, 0, length);
 			}

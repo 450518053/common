@@ -24,7 +24,7 @@ import org.apache.http.util.EntityUtils;
 /**                    
  * @Filename HttpClientUtils.java
  *
- * @Description httpClient工具类
+ * @Description httpClient工具类 
  *
  * @author tan 2015年10月26日
  *

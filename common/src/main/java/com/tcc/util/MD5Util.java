@@ -13,7 +13,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 /**                    
  * @Filename MD5Util.java
  *
- * @Description md5算法工具类 
+ * @Description md5算法工具类
  *
  * @author tan 2015-9-29
  *

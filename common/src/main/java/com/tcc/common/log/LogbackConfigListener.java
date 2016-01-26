@@ -137,6 +137,7 @@ public class LogbackConfigListener implements ServletContextListener {
 			uncaughtExceptionHandler);
 		Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandlerWrapper);
 		event.getServletContext().log("设置默认线程未捕获异常处理器:" + uncaughtExceptionHandlerWrapper);
+		System.setProperty(ENV, env);
 	}
 	
 	/**

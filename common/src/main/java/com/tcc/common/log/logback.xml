@@ -21,11 +21,32 @@
 	4.
 		<logger>节点设置指定的logger
 		<root>节点设置全局的logger
+	5.正式环境取消打印控制台
+		添加依赖：
+		<dependency>
+			<groupId>org.codehaus.janino</groupId>
+			<artifactId>janino</artifactId>
+			<version>2.7.8</version>
+	  	</dependency> 
+	  	修改logback.xml中原ConsoleAppender配置如下：
+		<if condition='property("os.name").toUpperCase().contains("WINDOWS")'>
+			<then>
+				<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+					<encoder>
+						<pattern>[%d{dd HH:mm:ss.SSS} %-5level] [%5.12thread] %logger{0}:%L %msg%n</pattern>
+					</encoder>
+				</appender>
+				<root>
+					<appender-ref ref="STDOUT" />
+				</root>
+			</then>
+		</if>
  -->
 <configuration scan="true" scanPeriod="60 seconds" debug="true">
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
 		<resetJUL>true</resetJUL>
 	</contextListener>
+	<!-- 环境 -->
 	<property resource="/log/log-${spring.profiles.active}.properties" />
 	<contextName>${CONTEXT_NAME}</contextName>
 
@@ -56,23 +77,6 @@
 		</encoder>
 	</appender>
 	
-	<appender name="OPERATE-APPENDER"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/${CONTEXT_NAME}-operate.log</file>
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>
-				${LOG_PATH}/${CONTEXT_NAME}-operate.log.%d{yyyy-MM-dd}.%i
-			</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10240MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy>
-		<encoder>
-			<pattern>[%d{dd HH:mm:ss.SSS}]%msg%n</pattern>
-		</encoder>
-	</appender>
-
 	<appender name="ERROR-APPENDER"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_PATH}/${CONTEXT_NAME}-error.log</file>
@@ -99,11 +103,6 @@
 	
 	<logger name="com.tcc" additivity="false" level="INFO">
 		<appender-ref ref="ASYNC-INFO-APPENDER" />
-	</logger>
-	
-	<!-- 操作日志 -->
-	<logger name="operate" additivity="false" level="INFO">
-		<appender-ref ref="OPERATE-APPENDER" />
 	</logger>
 
 	<root level="INFO">

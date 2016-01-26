@@ -53,13 +53,13 @@ public class MD5Util {
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException("计算文件MD5值异常,未找到文件'" + f.getAbsolutePath() + "'");
 		} catch (Exception e) {
-			throw new Exception("计算文件MD5值异常");
+			throw new Exception("计算文件MD5值异常", e);
 		} finally {
 			try {
 				if (fis != null)
 					fis.close();
 			} catch (IOException e) {
-				throw new Exception("计算文件MD5值关闭流异常");
+				throw new IOException("计算文件MD5值关闭流异常", e);
 			}
 		}
 	}

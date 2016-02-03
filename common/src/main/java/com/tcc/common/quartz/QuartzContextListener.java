@@ -17,7 +17,7 @@ import com.tcc.common.util.SpringContextUtils;
  * 	
 		需在web.xml作如下配置
 		<listener>
-			<listener-class>com.uaf.pbcr.quartz.QuartzContextListener</listener-class>
+			<listener-class>com.tcc.common.quartz.QuartzContextListener</listener-class>
 		</listener>
  *
  * @author tan 2016年1月27日

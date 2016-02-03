@@ -19,7 +19,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 			<!-- spring、quartz整合 -->
 			<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 				<property name="jobFactory">
-		            <bean class="com.uaf.biz.schedule.JobFactory" />
+		            <bean class="com.tcc.common.quartz.JobFactory" />
 		        </property>
 			</bean>
 		}

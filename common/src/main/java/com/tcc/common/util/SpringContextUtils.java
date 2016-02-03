@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContextAware;
  		1.此类应注入spring容器
 		2.需在web.xml作如下配置
 		<listener>
-			<listener-class>com.uaf.pbcr.base.util.SpringContextUtils</listener-class>
+			<listener-class>com.tcc.common.util.SpringContextUtils</listener-class>
 		</listener>
 		
  * @author tan 2016年1月27日

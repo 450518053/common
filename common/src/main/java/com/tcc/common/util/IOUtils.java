@@ -2,8 +2,6 @@ package com.tcc.common.util;
 
 import java.io.File;
 
-import org.apache.commons.lang3.Validate;
-
 /**                    
  * @Filename IOUtils.java
  *
@@ -23,7 +21,7 @@ public class IOUtils {
 	 * @throws IllegalArgumentException 当 file 为 null 时。
 	 */
 	public static String getExtension(File file) {
-		Validate.notNull(file);
+		Args.notNull(file, "notNull");
 		return getExtension(file.getPath());
 	}
 	
@@ -34,7 +32,7 @@ public class IOUtils {
 	 * @throws IllegalArgumentException 当 fileName 为 null 时。
 	 */
 	public static String getExtension(String fileName) {
-		Validate.notNull(fileName);
+		Args.notBlank(fileName, "fileName");
 		int index = fileName.lastIndexOf('.');
 		if (index == -1) {
 			return "";

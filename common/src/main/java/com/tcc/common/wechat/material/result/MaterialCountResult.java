@@ -1,47 +1,27 @@
-package com.tcc.common.wechat.material.model;
+package com.tcc.common.wechat.material.result;
+
+import com.tcc.common.wechat.base.result.BaseResult;
 
 /**                    
- * @Filename MaterialCount.java
+ * @Filename MaterialCountResult.java
  *
  * @Description 素材统计
  *
- * @author tan 2015年10月30日
+ * @author tan 2016年2月16日
  *
  * @email 450518053@qq.com
  * 
  */
-public class MaterialCount {
+public class MaterialCountResult extends BaseResult {
 	
 	private int	voiceCount;	//语音总数量
-	
+				
 	private int	videoCount;	//视频总数量
-	
+				
 	private int	imageCount;	//图片总数量
-	
+				
 	private int	newsCount;	//图文总数量
-	
-	/**
-	 * 构建一个<code>MaterialCount.java</code>
-	 */
-	public MaterialCount() {
-		super();
-	}
-	
-	/**
-	 * 构建一个<code>MaterialCount.java</code>
-	 * @param voiceCount
-	 * @param videoCount
-	 * @param imageCount
-	 * @param newsCount
-	 */
-	public MaterialCount(int voiceCount, int videoCount, int imageCount, int newsCount) {
-		super();
-		this.voiceCount = voiceCount;
-		this.videoCount = videoCount;
-		this.imageCount = imageCount;
-		this.newsCount = newsCount;
-	}
-	
+				
 	public int getVoiceCount() {
 		return voiceCount;
 	}

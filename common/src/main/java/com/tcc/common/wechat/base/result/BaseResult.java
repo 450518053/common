@@ -5,7 +5,7 @@ import com.tcc.common.wechat.base.enums.ResultCodeEnum;
 /**                    
  * @Filename BaseResult.java
  *
- * @Description 
+ * @Description 基本返回结果类
  *
  * @author tan 2016年2月4日
  *

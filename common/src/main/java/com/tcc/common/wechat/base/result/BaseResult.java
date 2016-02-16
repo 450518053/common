@@ -21,9 +21,9 @@ public class BaseResult {
 	private ResultCodeEnum	resultCode	= ResultCodeEnum._0;
 										
 	/**
-	 * 返回结果信息
+	 * 错误码
 	 */
-	private String			resultMessage;
+	private int				errorCode;
 							
 	/**
 	 * 腾讯端直接返回的错误信息
@@ -35,20 +35,20 @@ public class BaseResult {
 	 */
 	private String			args;
 							
+	public int getErrorCode() {
+		return errorCode;
+	}
+	
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+	
 	public ResultCodeEnum getResultCode() {
 		return resultCode;
 	}
 	
 	public void setResultCode(ResultCodeEnum resultCode) {
 		this.resultCode = resultCode;
-	}
-	
-	public String getResultMessage() {
-		return resultMessage;
-	}
-	
-	public void setResultMessage(String resultMessage) {
-		this.resultMessage = resultMessage;
 	}
 	
 	public String getErrorMessage() {

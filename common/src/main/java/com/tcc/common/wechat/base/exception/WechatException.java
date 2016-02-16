@@ -1,5 +1,7 @@
 package com.tcc.common.wechat.base.exception;
 
+import com.tcc.common.wechat.base.enums.ResultCodeEnum;
+
 /**                    
  * @Filename WechatException.java
  *
@@ -12,51 +14,71 @@ package com.tcc.common.wechat.base.exception;
  */
 public class WechatException extends Exception {
 	
+	/**
+	 * 返回码
+	 * 默认未知
+	 */
+	private ResultCodeEnum		resultCode			= ResultCodeEnum.UNKNOWN;
+													
+	/**
+	 * 腾讯端直接返回的错误信息
+	 */
+	private String				errorMessage;
+								
+	/**
+	 * 错误码
+	 */
+	private int					errorCode;
+								
+	/**
+	 * 自定义错误描述
+	 */
+	private String				description;
+								
 	/** Comment for <code>serialVersionUID</code> */
-	private static final long serialVersionUID = 8561092224847631765L;
-	
-	/**
-	 * 构建一个<code>WechatException.java</code>
-	 */
-	public WechatException() {
-		super();
+	private static final long	serialVersionUID	= 8561092224847631765L;
+													
+	public WechatException(int errorCode, String errmsg, String description) {
+		this.errorCode = errorCode;
+		this.errorMessage = errmsg;
+		this.description = description;
+		this.resultCode = ResultCodeEnum.getByCode(errorCode);
 	}
 	
-	/**
-	 * 构建一个<code>WechatException.java</code>
-	 * @param message
-	 * @param cause
-	 * @param enableSuppression
-	 * @param writableStackTrace
-	 */
-	public WechatException(	String message, Throwable cause, boolean enableSuppression,
-							boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
+	public ResultCodeEnum getResultCode() {
+		return resultCode;
 	}
 	
-	/**
-	 * 构建一个<code>WechatException.java</code>
-	 * @param message
-	 * @param cause
-	 */
-	public WechatException(String message, Throwable cause) {
-		super(message, cause);
+	public void setResultCode(ResultCodeEnum resultCode) {
+		this.resultCode = resultCode;
 	}
 	
-	/**
-	 * 构建一个<code>WechatException.java</code>
-	 * @param message
-	 */
-	public WechatException(String message) {
-		super(message);
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 	
-	/**
-	 * 构建一个<code>WechatException.java</code>
-	 * @param cause
-	 */
-	public WechatException(Throwable cause) {
-		super(cause);
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+	
+	public int getErrorCode() {
+		return errorCode;
+	}
+	
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }

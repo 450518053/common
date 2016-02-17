@@ -5,7 +5,7 @@ import java.util.Collection;
 /**                    
  * @Filename Args.java
  *
- * @Description 
+ * @Description 校验类
  *
  * @author tan 2016年2月4日
  *

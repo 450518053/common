@@ -52,10 +52,13 @@ public enum ResultCodeEnum {
 	_40032(40032, "不合法的openid列表长度"),
 	_40033(40033, "不合法的请求字符，不能包含\\uxxxx格式的字符"),
 	_40035(40035, "不合法的参数"),
+	_40037(40037, "不合法的模板id"),
 	_40038(40038, "不合法的请求格式"),
 	_40039(40039, "不合法的URL长度"),
 	_40050(40050, "不合法的分组id"),
 	_40051(40051, "分组名字不合法"),
+	_40054(40054, "不合法的子菜单url域名"),
+	_40055(40055, "不合法的按钮url域名"),
 	_40117(40117, "分组名字不合法"),
 	_40118(40118, "media_id大小不合法"),
 	_40119(40119, "button类型错误"),
@@ -80,6 +83,7 @@ public enum ResultCodeEnum {
 	_43003(43003, "需要HTTPS请求"),
 	_43004(43004, "需要接收者关注"),
 	_43005(43005, "需要好友关系"),
+	_43100(43100, "更改模板太频繁"),//change template too frequently
 	_44001(44001, "多媒体文件为空"),
 	_44002(44002, "POST的数据包为空"),
 	_44003(44003, "图文消息内容为空"),
@@ -143,16 +147,16 @@ public enum ResultCodeEnum {
 	_9001034(9001034, "设备备注信息过长"),
 	_9001035(9001035, "设备申请参数不合法"),
 	_9001036(9001036, "查询起始值begin不合法 ");
-	
-	private final int	code;//实际值
-	
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									
+	private final int		code;	//实际值
+							
 	private final String	message;//描述
-	
+							
 	ResultCodeEnum(int code, String message) {
 		this.code = code;
 		this.message = message;
 	}
-
+	
 	/**
 	 * @return Returns the code.
 	 */
@@ -175,7 +179,7 @@ public enum ResultCodeEnum {
 	 */
 	public static ResultCodeEnum getByCode(int code) {
 		for (ResultCodeEnum _enum : values()) {
-			if (_enum.code==code) {
+			if (_enum.code == code) {
 				return _enum;
 			}
 		}
@@ -207,5 +211,13 @@ public enum ResultCodeEnum {
 		}
 		return list;
 	}
-}
 	
+	/**
+	 * @return
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return this.code + "-->" + this.message;
+	}
+}

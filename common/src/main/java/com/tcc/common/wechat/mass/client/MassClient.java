@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.util.Args;
+import com.tcc.common.util.StringUtils;
 import com.tcc.common.wechat.base.client.WechatClient;
 import com.tcc.common.wechat.base.util.WechatHttpClientUtils;
 import com.tcc.common.wechat.mass.enums.MassTypeEnums;

@@ -1,5 +1,8 @@
 package com.tcc.common.wechat.base.result;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.tcc.common.wechat.base.enums.ResultCodeEnum;
 
 /**                    
@@ -35,6 +38,19 @@ public class BaseResult {
 	 */
 	private String			args;
 							
+	/**
+	 * 腾讯端返回值
+	 */
+	private String			retVal;
+							
+	public String getRetVal() {
+		return retVal;
+	}
+	
+	public void setRetVal(String retVal) {
+		this.retVal = retVal;
+	}
+	
 	public int getErrorCode() {
 		return errorCode;
 	}
@@ -67,4 +83,12 @@ public class BaseResult {
 		this.args = args;
 	}
 	
+	/**
+	 * @return
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
 }

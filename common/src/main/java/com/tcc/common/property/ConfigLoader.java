@@ -27,8 +27,10 @@ public class ConfigLoader {
 	 * @param configFileDir 在项目中的目录
 	 * @param configFileName 文件名
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Config getInstatnce(final String configFileDir, final String configFileName) {
+	public static Config getInstatnce(	final String configFileDir,
+										final String configFileName) throws IOException {
 		String result = "";
 		Pattern p = Pattern.compile("[/|\\\\]*([A-Za-z0-9-_\\.]+)[/|\\\\]*");//清理掉目录前后的分割符
 		Matcher m = p.matcher(configFileDir);
@@ -45,8 +47,9 @@ public class ConfigLoader {
 	 * 获取一个Config实例
 	 * @param configFilePath 路径
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Config getInstatnce(final String configFilePath) {
+	public static Config getInstatnce(final String configFilePath) throws IOException {
 		InputStream in = null;
 		Map<String, String> map = new HashMap<String, String>();
 		try {
@@ -61,15 +64,9 @@ public class ConfigLoader {
 				String key = (String) e.nextElement();
 				map.put(key, p.getProperty(key));
 			}
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
 		} finally {
 			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					throw new IllegalArgumentException(e);
-				}
+				in.close();
 			}
 		}
 		return new Config(map);

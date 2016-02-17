@@ -16,9 +16,9 @@ import com.tcc.common.wechat.base.result.BaseResult;
  */
 public abstract class WechatClient {
 	
-	protected static String			appId;
+	public static String			appId;
 									
-	protected static String			appSecret;
+	public static String			appSecret;
 									
 	/**
 	 * 接口调用凭据，需在项目启动时初始化
@@ -37,6 +37,7 @@ public abstract class WechatClient {
 	 * @return 
 	 */
 	protected boolean analyErrcode(BaseResult result, JSONObject jsonObject) {
+		result.setRetVal(jsonObject.toJSONString());
 		int errcode = jsonObject.getIntValue("errcode");
 		if (errcode == 0) {
 			return true;

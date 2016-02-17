@@ -23,7 +23,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class MD5Util {
 	
-	static MessageDigest md = null;
+	private static MessageDigest md = null;
 	
 	static {
 		try {

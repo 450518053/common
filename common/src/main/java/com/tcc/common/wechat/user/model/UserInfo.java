@@ -1,5 +1,8 @@
 package com.tcc.common.wechat.user.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**                    
  * @Filename UserInfo.java
  *
@@ -142,4 +145,12 @@ public class UserInfo {
 		this.groupId = groupId;
 	}
 	
+	/**
+	 * @return
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
 }

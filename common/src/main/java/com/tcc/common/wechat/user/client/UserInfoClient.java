@@ -87,41 +87,71 @@ public class UserInfoClient extends WechatClient {
 	/**
 	 * 获取关注用户openId列表
 	 * 		一次拉取调用最多拉取10000个关注者的openId，可以通过多次拉取的方式来满足需求
-	 * @param nextOpenid 拉取列表的最后一个用户的openId，若为null则为首次获取
+	 * @param nextOpenId 拉取列表的最后一个用户的openId，若为null则为首次获取
 	 * @return
 	 * @throws Exception
 	 */
-	public OpenIdListResult getOpenIdList(String nextOpenid) throws Exception {
+	public OpenIdListResult getOpenIdList() throws Exception {
+		OpenIdListResult result = new OpenIdListResult();
+		try {
+			List<String> openIdList = new ArrayList<String>();
+			int total = -1;
+			int count = -1;
+			//当前拉取总个数
+			int index = -1;
+			//是否是首次
+			boolean first = true;
+			String nextOpenId = null;
+			JSONObject jsonObject = null;
+			//关注者数量超过10000时会多次执行
+			while (true) {
+				jsonObject = getOpenIdList(nextOpenId);
+				
+				total = jsonObject.getIntValue("total");
+				nextOpenId = jsonObject.getString("next_openid");
+				count = jsonObject.getIntValue("count");
+				
+				openIdList.addAll(
+					convertJSONArray(jsonObject.getJSONObject("data").getJSONArray("openid")));
+				if (first) {
+					index = total - count;
+					first = false;
+				} else {
+					index -= count;
+				}
+				if (index <= 0) {
+					break;
+				}
+			}
+			result.setOpenIdList(openIdList);
+			result.setNextOpenId(nextOpenId);
+			result.setTotal(total);
+			result.setCount(count);
+		} catch (WechatException e) {
+			result.setErrorCode(e.getErrorCode());
+			result.setErrorMessage(e.getErrorMessage());
+			result.setResultCode(e.getResultCode());
+			result.setArgs(e.getDescription());
+		}
+		return result;
+	}
+	
+	private JSONObject getOpenIdList(String nextOpenId) throws Exception {
 		JSONObject jsonObject = null;
-		if (StringUtils.isBlank(nextOpenid)) {
+		if (StringUtils.isBlank(nextOpenId)) {
 			//（首次）获取
 			jsonObject = WechatHttpClientUtils
 				.get(GET_OPENIDLIST_URL.replace("ACCESS_TOKEN", token));
 		} else {
 			//非首次获取
 			jsonObject = WechatHttpClientUtils.get(GET_OPENIDLIST_OTHER_URL
-				.replace("ACCESS_TOKEN", token).replace("NEXT_OPENID", nextOpenid));
+				.replace("ACCESS_TOKEN", token).replace("NEXT_OPENID", nextOpenId));
 		}
-		OpenIdListResult result = new OpenIdListResult();
-		result.setArgs(nextOpenid);
-		if (analyErrcode(result, jsonObject)) {
-			List<String> data = convertJSONArray(
-				jsonObject.getJSONObject("data").getJSONArray("openid"));
-			result.setOpenIdList(data);
-			result.setTotal(jsonObject.getIntValue("total"));
-			result.setCount(jsonObject.getIntValue("count"));
-			result.setNextOpenId(jsonObject.getString("next_openid"));
+		if (jsonObject.containsKey("errcode")) {
+			throw new WechatException(jsonObject.getIntValue("errcode"),
+				jsonObject.getString("errmsg"), "获取用户关注列表失败,当前下一个openId是'" + nextOpenId + "'");
 		}
-		return result;
-		//		int count = jsonObject.getIntValue("total") - jsonObject.getIntValue("count");//关注者数量超过10000时
-		//		int index = 1;
-		//		while (count > 0) {
-		//			index++;
-		//			jsonObject = getOpenIdList(jsonObject.getString("next_openid"), index);
-		//			data.addAll(JSONArray.toList(jsonObject.getJSONObject("data").getJSONArray("openid")));
-		//			count -= jsonObject.getInt("count");
-		//		}
-		//		return new HashSet<String>(data);
+		return jsonObject;
 	}
 	
 	/**

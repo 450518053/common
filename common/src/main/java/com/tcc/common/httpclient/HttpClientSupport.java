@@ -27,7 +27,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 /**                    
- * @Filename HttpClientInit.java
+ * @Filename HttpClientSupport.java
  *
  * @Description HttpClient初始化类
  * 					适用httpClient 4.5版本
@@ -37,7 +37,7 @@ import org.apache.http.protocol.HttpContext;
  * @email 450518053@qq.com
  * 
  */
-public class HttpClientInit {
+public class HttpClientSupport {
 	
 	private final int					defaultSocketTimeout;
 										
@@ -65,7 +65,7 @@ public class HttpClientInit {
 	private ConnectionKeepAliveStrategy	keepAliveStrategy	= new CustomConnectionKeepAliveStrategy();
 															
 	/**
-	 * 构建一个<code>HttpClientInit.java</code>
+	 * 构建一个<code>HttpClientSupport.java</code>
 	 * @param defaultSocketTimeout 请求超时，默认15000
 	 * @param defaultConnectTimeout 连接超时，默认15000
 	 * @param defaultConnectionRequestTimeout 从连接池中取连接的超时时间，默认15000
@@ -73,9 +73,9 @@ public class HttpClientInit {
 	 * @param defaultMaxPerRoute 最大路由，默认200
 	 * @param defaultKeepAliveTime keep-alive time，小于等于0关闭keep-alive策略
 	 */
-	public HttpClientInit(	int defaultSocketTimeout, int defaultConnectTimeout,
-							int defaultConnectionRequestTimeout, int defaultMaxTotal,
-							int defaultMaxPerRoute, int defaultKeepAliveTime) {
+	public HttpClientSupport(	int defaultSocketTimeout, int defaultConnectTimeout,
+								int defaultConnectionRequestTimeout, int defaultMaxTotal,
+								int defaultMaxPerRoute, int defaultKeepAliveTime) {
 		super();
 		this.defaultSocketTimeout = defaultSocketTimeout > 0 ? defaultSocketTimeout : 15000;
 		this.defaultConnectTimeout = defaultConnectTimeout > 0 ? defaultConnectTimeout : 15000;

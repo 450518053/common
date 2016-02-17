@@ -25,19 +25,15 @@ import com.tcc.common.httpclient.HttpClientUtils;
  * 
  */
 public class WechatHttpClientUtils {
-	//	
-	//	static {
-	//		HttpClientUtils.setClient(new CloseableHttpClientInit().init(true));
-	//	}
 	
 	/**
 	 * post请求
 	 * @param requestUrl 请求地址
 	 * @param outputStr 内容
 	 * @return JSONObject
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static JSONObject post(String requestUrl, String outputStr) throws Exception {
+	public static JSONObject post(String requestUrl, String outputStr) throws IOException {
 		return JSON.parseObject(HttpClientUtils.post(requestUrl, outputStr));
 	}
 	
@@ -45,9 +41,9 @@ public class WechatHttpClientUtils {
 	 * get请求
 	 * @param requestUrl 请求地址
 	 * @return JSONObject
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static JSONObject get(String requestUrl) throws Exception {
+	public static JSONObject get(String requestUrl) throws IOException {
 		return JSON.parseObject(HttpClientUtils.get(requestUrl));
 	}
 	
@@ -56,9 +52,9 @@ public class WechatHttpClientUtils {
 	 * @param saveFile
 	 * @param requestUrl 完整的请求地址
 	 * @return 
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static void download(File saveFile, String requestUrl) throws Exception {
+	public static void download(File saveFile, String requestUrl) throws IOException {
 		HttpClientUtils.download(saveFile, requestUrl);
 	}
 	
@@ -76,9 +72,9 @@ public class WechatHttpClientUtils {
 	 * @param uploadFile
 	 * @param requestUrl 完整的请求地址
 	 * @return 
-	 * @throws Exception 
+	 * @throws IOException 
 	 *///TODO 其他格式文件
-	public static JSONObject uploadMedia(File uploadFile, String requestUrl) throws Exception {
+	public static JSONObject uploadMedia(File uploadFile, String requestUrl) throws IOException {
 		HttpPost httpPost = new HttpPost(requestUrl);
 		httpPost.setHeaders(basicHeaders);
 		String BOUNDARY = "---------------------------" + System.currentTimeMillis();
@@ -92,9 +88,10 @@ public class WechatHttpClientUtils {
 	 * @param file
 	 * @param boundary
 	 * @return
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	private static byte[] packing(File file, String boundary) throws Exception {
+	private static byte[] packing(File file, String boundary) throws IOException {
 		StringBuilder stringBuilder = new StringBuilder();
 		ByteArrayBuffer byteArrayBuilder = null;
 		DataInputStream in = null;
@@ -117,17 +114,11 @@ public class WechatHttpClientUtils {
 			byteArrayBuilder.append(("\r\n--" + boundary + "--\r\n").getBytes("utf-8"), 0,
 				("\r\n--" + boundary + "--\r\n").getBytes("utf-8").length);//定义最后数据分隔线 
 			return byteArrayBuilder.toByteArray();
-		} catch (Exception e) {
-			throw new Exception("上传素材，组装数据异常", e);
 		} finally {
-			try {
-				if (byteArrayBuilder != null)
-					byteArrayBuilder.clear();
-				if (in != null)
-					in.close();
-			} catch (IOException e) {
-				throw new IOException("上传素材，组装数据关闭流异常", e);
-			}
+			if (byteArrayBuilder != null)
+				byteArrayBuilder.clear();
+			if (in != null)
+				in.close();
 		}
 	}
 	

@@ -54,9 +54,9 @@ public class HttpClientUtils {
 	 * @param requestUrl 请求地址
 	 * @param bytes 字节数组
 	 * @return utf-8编码字符串
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static String post(String requestUrl, byte[] bytes) throws Exception {
+	public static String post(String requestUrl, byte[] bytes) throws IOException {
 		ByteArrayEntity byteEntity = new ByteArrayEntity(bytes);
 		return post(new HttpPost(requestUrl), byteEntity, defaultCharset);
 	}
@@ -66,9 +66,9 @@ public class HttpClientUtils {
 	 * @param requestUrl 请求地址
 	 * @param outputStr 字符串
 	 * @return utf-8编码字符串
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static String post(String requestUrl, String outputStr) throws Exception {
+	public static String post(String requestUrl, String outputStr) throws IOException {
 		StringEntity stringEntity = null;
 		if (outputStr != null) {
 			stringEntity = new StringEntity(outputStr, defaultCharset);
@@ -80,9 +80,9 @@ public class HttpClientUtils {
 	 * post请求
 	 * @param httpPost
 	 * @param params 内容
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static String post(HttpPost httpPost, HttpEntity params) throws Exception {
+	public static String post(HttpPost httpPost, HttpEntity params) throws IOException {
 		return post(httpPost, params, defaultCharset);
 	}
 	
@@ -91,10 +91,10 @@ public class HttpClientUtils {
 	 * @param httpPost 自定义消息头
 	 * @param params 内容
 	 * @return 指定charset编码字符串
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
 	public static String post(	HttpPost httpPost, HttpEntity params,
-								String charset) throws Exception {
+								String charset) throws IOException {
 		HttpEntity entity = null;
 		httpPost.setEntity(params);
 		CloseableHttpResponse httpResponse = null;
@@ -102,7 +102,7 @@ public class HttpClientUtils {
 			httpResponse = client.execute(httpPost);
 			entity = httpResponse.getEntity();
 			return EntityUtils.toString(entity, charset);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("发起post请求异常,请求地址'{}',请求参数'{}'" + ",'{}'", httpPost.getURI().toString(),
 				params.toString(), getResponseMess(httpResponse), e);
 			throw e;
@@ -115,9 +115,9 @@ public class HttpClientUtils {
 	 * get请求
 	 * @param requestUrl 请求地址
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public static String get(String requestUrl) throws Exception {
+	public static String get(String requestUrl) throws IOException {
 		return get(new HttpGet(requestUrl), defaultCharset);
 	}
 	
@@ -125,9 +125,9 @@ public class HttpClientUtils {
 	 * get请求get请求
 	 * @param httpGet
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public static String get(HttpGet httpGet) throws Exception {
+	public static String get(HttpGet httpGet) throws IOException {
 		return get(httpGet, defaultCharset);
 	}
 	
@@ -136,9 +136,9 @@ public class HttpClientUtils {
 	 * @param httpGet
 	 * @param charset
 	 * @return
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static String get(HttpGet httpGet, String charset) throws Exception {
+	public static String get(HttpGet httpGet, String charset) throws IOException {
 		charset = checkCharset(charset);
 		HttpEntity entity = null;
 		CloseableHttpResponse httpResponse = null;
@@ -146,7 +146,7 @@ public class HttpClientUtils {
 			httpResponse = client.execute(httpGet);
 			entity = httpResponse.getEntity();
 			return EntityUtils.toString(entity, charset);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("发起get请求异常,请求地址'{}','{}'", httpGet.getURI().toString(),
 				getResponseMess(httpResponse), e);
 			throw e;
@@ -160,9 +160,9 @@ public class HttpClientUtils {
 	 * @param saveFile
 	 * @param requestUrl 完整的请求地址
 	 * @return 
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public static void download(File saveFile, String requestUrl) throws Exception {
+	public static void download(File saveFile, String requestUrl) throws IOException {
 		CloseableHttpResponse httpResponse = null;
 		HttpEntity entity = null;
 		InputStream in = null;
@@ -183,26 +183,20 @@ public class HttpClientUtils {
 				}
 				out.flush();
 			} else {
-				throw new Exception(String.valueOf(code));
+				throw new IOException(String.valueOf(code));
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("下载多媒体异常,保存路径'{}','{}'", saveFile.getAbsolutePath(),
 				getResponseMess(httpResponse), e);
 			throw e;
 		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-				closeQuietly(httpResponse);
-			} catch (IOException e) {
-				logger.error("下载多媒体释放资源异常,保存路径'{}','{}'", saveFile.getAbsolutePath(),
-					getResponseMess(httpResponse), e);
-				throw e;
+			if (in != null) {
+				in.close();
 			}
+			if (out != null) {
+				out.close();
+			}
+			closeQuietly(httpResponse);
 		}
 		
 	}

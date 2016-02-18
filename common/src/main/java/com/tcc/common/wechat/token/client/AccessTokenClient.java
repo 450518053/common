@@ -1,5 +1,7 @@
 package com.tcc.common.wechat.token.client;
 
+import java.io.IOException;
+
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.wechat.base.client.WechatClient;
 import com.tcc.common.wechat.base.util.WechatHttpClientUtils;
@@ -32,9 +34,9 @@ public class AccessTokenClient extends WechatClient {
 	/**
 	 * 获取accessToken凭证
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public AccessTokenResult getAccessToken() throws Exception {
+	public AccessTokenResult getAccessToken() throws IOException {
 		JSONObject jsonObject = WechatHttpClientUtils.get(ACESS_TOKEN_URL);
 		AccessTokenResult result = new AccessTokenResult();
 		if (analyErrcode(result, jsonObject)) {
@@ -47,9 +49,9 @@ public class AccessTokenClient extends WechatClient {
 	/**
 	 * 获取jsApiTicket凭证
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public JsApiTicketResult jsApiTicket() throws Exception {
+	public JsApiTicketResult jsApiTicket() throws IOException {
 		JSONObject jsonObject = WechatHttpClientUtils
 			.get(JS_API_URL.replace("ACCESS_TOKEN", token));
 		JsApiTicketResult result = new JsApiTicketResult();

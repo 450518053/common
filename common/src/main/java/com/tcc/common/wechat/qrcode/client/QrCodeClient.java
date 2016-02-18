@@ -1,6 +1,7 @@
 package com.tcc.common.wechat.qrcode.client;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.util.Args;
@@ -34,9 +35,9 @@ public class QrCodeClient extends WechatClient {
 	 * 通过接口获取永久二维码ticket，该ticket可在有限时间内换取二维码
 	 * @param scene
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public AcquireTicketResult acquireTicket(String scene) throws Exception {
+	public AcquireTicketResult acquireTicket(String scene) throws IOException {
 		Args.notBlank(scene, "scene");
 		JSONObject jsonObject = WechatHttpClientUtils.post(QRCODE_CREATE_URL,
 			QRCODE_CREATE_JSON.replace("{SCENE}", scene));
@@ -55,9 +56,9 @@ public class QrCodeClient extends WechatClient {
 	 * @param saveFile
 	 * @param ticket
 	 * @return
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public void downQrCode(File saveFile, String ticket) throws Exception {
+	public void downQrCode(File saveFile, String ticket) throws IOException {
 		WechatHttpClientUtils.download(saveFile, ticket);
 	}
 }

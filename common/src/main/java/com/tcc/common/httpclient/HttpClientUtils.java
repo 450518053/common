@@ -40,6 +40,9 @@ public class HttpClientUtils {
 	 */
 	private static CloseableHttpClient	client;
 										
+	/**
+	 * 默认编码
+	 */
 	private static final String			defaultCharset	= "utf-8";
 														
 	private static final Logger			logger			= LoggerFactory

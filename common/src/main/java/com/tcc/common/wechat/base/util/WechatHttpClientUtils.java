@@ -13,6 +13,8 @@ import org.apache.http.util.ByteArrayBuffer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.httpclient.HttpClientUtils;
+import com.tcc.common.log.Logger;
+import com.tcc.common.log.LoggerFactory;
 
 /**                    
  * @Filename WechatHttpClientUtils.java
@@ -27,6 +29,13 @@ import com.tcc.common.httpclient.HttpClientUtils;
 public class WechatHttpClientUtils {
 	
 	/**
+	 * 是否开启执行记录日志
+	 */
+	private static final boolean	IS_LOG	= true;
+											
+	private static final Logger		logger	= LoggerFactory.getLogger(WechatHttpClientUtils.class);
+											
+	/**
 	 * post请求
 	 * @param requestUrl 请求地址
 	 * @param outputStr 内容
@@ -34,7 +43,15 @@ public class WechatHttpClientUtils {
 	 * @throws IOException 
 	 */
 	public static JSONObject post(String requestUrl, String outputStr) throws IOException {
-		return JSON.parseObject(HttpClientUtils.post(requestUrl, outputStr));
+		long start = System.currentTimeMillis();
+		try {
+			return JSON.parseObject(HttpClientUtils.post(requestUrl, outputStr));
+		} finally {
+			if (IS_LOG) {
+				logger.info("post请求,执行时间'{}'毫秒,请求地址'{}',请求参数'{}'",
+					System.currentTimeMillis() - start, requestUrl, outputStr);
+			}
+		}
 	}
 	
 	/**
@@ -44,7 +61,15 @@ public class WechatHttpClientUtils {
 	 * @throws IOException 
 	 */
 	public static JSONObject get(String requestUrl) throws IOException {
-		return JSON.parseObject(HttpClientUtils.get(requestUrl));
+		long start = System.currentTimeMillis();
+		try {
+			return JSON.parseObject(HttpClientUtils.get(requestUrl));
+		} finally {
+			if (IS_LOG) {
+				logger.info("get请求,执行时间'{}'毫秒,请求地址'{}'", System.currentTimeMillis() - start,
+					requestUrl);
+			}
+		}
 	}
 	
 	/**
@@ -55,7 +80,15 @@ public class WechatHttpClientUtils {
 	 * @throws IOException 
 	 */
 	public static void download(File saveFile, String requestUrl) throws IOException {
-		HttpClientUtils.download(saveFile, requestUrl);
+		long start = System.currentTimeMillis();
+		try {
+			HttpClientUtils.download(saveFile, requestUrl);
+		} finally {
+			if (IS_LOG) {
+				logger.info("下载文件,执行时间'{}'毫秒,请求地址'{}',文件路径'{}'", System.currentTimeMillis() - start,
+					requestUrl, saveFile.getAbsolutePath());
+			}
+		}
 	}
 	
 	private static BasicHeader[] basicHeaders = {	new BasicHeader("Accept",
@@ -68,7 +101,7 @@ public class WechatHttpClientUtils {
 													new BasicHeader("Connection", "keep-alive") };
 													
 	/**
-	 * 上传素材
+	 * 上传文件
 	 * @param uploadFile
 	 * @param requestUrl 完整的请求地址
 	 * @return 
@@ -79,8 +112,17 @@ public class WechatHttpClientUtils {
 		httpPost.setHeaders(basicHeaders);
 		String BOUNDARY = "---------------------------" + System.currentTimeMillis();
 		httpPost.setHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-		return JSON.parseObject(
-			HttpClientUtils.post(httpPost, new ByteArrayEntity(packing(uploadFile, BOUNDARY))));
+		
+		long start = System.currentTimeMillis();
+		try {
+			return JSON.parseObject(
+				HttpClientUtils.post(httpPost, new ByteArrayEntity(packing(uploadFile, BOUNDARY))));
+		} finally {
+			if (IS_LOG) {
+				logger.info("上传文件,执行时间'{}'毫秒,请求地址'{}',文件路径'{}'", System.currentTimeMillis() - start,
+					requestUrl, uploadFile.getAbsolutePath());
+			}
+		}
 	}
 	
 	/**

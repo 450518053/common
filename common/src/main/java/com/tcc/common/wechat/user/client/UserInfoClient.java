@@ -1,5 +1,6 @@
 package com.tcc.common.wechat.user.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,9 +54,9 @@ public class UserInfoClient extends WechatClient {
 	 * 从腾讯端获取客户信息
 	 * @param openId
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public UserInfoResult getByOpenId(String openId) throws Exception {
+	public UserInfoResult getByOpenId(String openId) throws IOException {
 		Args.notEmpty(openId, "openId不能为null");
 		JSONObject jsonObject = WechatHttpClientUtils
 			.get(GET_USERINFO_URL.replace("ACCESS_TOKEN", token).replace("OPENID", openId));
@@ -89,9 +90,9 @@ public class UserInfoClient extends WechatClient {
 	 * 		一次拉取调用最多拉取10000个关注者的openId，可以通过多次拉取的方式来满足需求
 	 * @param nextOpenId 拉取列表的最后一个用户的openId，若为null则为首次获取
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public OpenIdListResult getOpenIdList() throws Exception {
+	public OpenIdListResult getOpenIdList() throws IOException {
 		OpenIdListResult result = new OpenIdListResult();
 		try {
 			List<String> openIdList = new ArrayList<String>();
@@ -136,7 +137,7 @@ public class UserInfoClient extends WechatClient {
 		return result;
 	}
 	
-	private JSONObject getOpenIdList(String nextOpenId) throws Exception {
+	private JSONObject getOpenIdList(String nextOpenId) throws IOException, WechatException {
 		JSONObject jsonObject = null;
 		if (StringUtils.isBlank(nextOpenId)) {
 			//（首次）获取
@@ -158,9 +159,9 @@ public class UserInfoClient extends WechatClient {
 	 * 获取用户信息列表
 	 * @param openIdList
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public UserInfosResult getUserInfoList(List<String> openIdList) throws Exception {
+	public UserInfosResult getUserInfoList(List<String> openIdList) throws IOException {
 		Args.notEmpty(openIdList, "openIdList");
 		UserInfosResult result = new UserInfosResult();
 		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
@@ -199,9 +200,11 @@ public class UserInfoClient extends WechatClient {
 	 * @param i
 	 * @param j
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws WechatException 
 	 */
-	private JSONObject getUserInfoList(String openIdListStr, int i, int j) throws Exception {
+	private JSONObject getUserInfoList(String openIdListStr, int i, int j)	throws IOException,
+																			WechatException {
 		String outputStr = "{\"user_list\":[{OPENIDLIST}]}".replace("{OPENIDLIST}", openIdListStr);//一次最多拉取100条
 		JSONObject jsonObject = WechatHttpClientUtils
 			.post(GET_USERINFOLIST_URL.replace("ACCESS_TOKEN", token), outputStr);

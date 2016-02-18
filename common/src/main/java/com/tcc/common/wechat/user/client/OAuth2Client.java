@@ -1,5 +1,6 @@
 package com.tcc.common.wechat.user.client;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -39,9 +40,9 @@ public class OAuth2Client extends WechatClient {
 	 * 通过code获取客户信息(openId)
 	 * @param code
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public OAuth2Result getByCode(String code) throws Exception {
+	public OAuth2Result getByCode(String code) throws IOException {
 		Args.notBlank(code, "code");
 		JSONObject jsonObject = WechatHttpClientUtils
 			.get(GET_OPENID_BY_CODE_URL.replace("CODE", code));
@@ -63,7 +64,6 @@ public class OAuth2Client extends WechatClient {
 	 * @param redirectURI 授权后重定向的回调链接地址，包括http://或者https://
 	 * @param state 重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节 
 	 * @return
-	 * @throws Exception
 	 */
 	public String transURL(ScopeTypeEnums scopeTypeEnums, String redirectURI, String state) {
 		Args.notBlank(redirectURI, "redirectURI");

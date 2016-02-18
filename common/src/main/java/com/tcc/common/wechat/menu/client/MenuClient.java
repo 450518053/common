@@ -1,5 +1,7 @@
 package com.tcc.common.wechat.menu.client;
 
+import java.io.IOException;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.util.Args;
@@ -29,9 +31,9 @@ public class MenuClient extends WechatClient {
 	 * 创建菜单
 	 * @param menu
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public BaseResult createMenu(Menu menu) throws Exception {
+	public BaseResult createMenu(Menu menu) throws IOException {
 		Args.notNull(menu, "menu");
 		String jsonStr = JSON.toJSONString(menu);
 		JSONObject jsonObject = WechatHttpClientUtils

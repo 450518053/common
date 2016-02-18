@@ -1,5 +1,6 @@
 package com.tcc.common.wechat.mass.client;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,10 +56,10 @@ public class MassClient extends WechatClient {
 	 * @param groupId 组id，若为空则向全部用户发送
 	 * @param content
 	 * @return
-	 * @throws Exception
+	 * @throws IOException 
 	 */
 	public MassResult sendByGroup(	MassTypeEnums type, String groupId,
-									String content) throws Exception {
+									String content) throws IOException {
 		Args.notEmpty(content, "content");
 		GroupFilter filter = null;
 		if (StringUtils.isBlank(groupId)) {
@@ -83,10 +84,10 @@ public class MassClient extends WechatClient {
 	 * @param openIdList
 	 * @param content
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public MassResult sendByOpenId(	MassTypeEnums type, List<String> openIdList,
-									String content) throws Exception {
+									String content) throws IOException {
 		Args.notEmpty(content, "content");
 		Args.notEmpty(openIdList, "openIdList");
 		if (openIdList.size() < 2) {
@@ -109,9 +110,10 @@ public class MassClient extends WechatClient {
 	 * @param openId
 	 * @param content
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public MassResult preview(MassTypeEnums type, String openId, String content) throws Exception {
+	public MassResult preview(	MassTypeEnums type, String openId,
+								String content) throws IOException {
 		Args.notEmpty(content, "content");
 		Args.notEmpty(openId, "openId");
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -132,9 +134,9 @@ public class MassClient extends WechatClient {
 	 * 删除群发，群发只有在刚发出的半小时内可以删除，不抛异常视为操作成功
 	 * 		删除群发消息只能删除图文消息和视频消息
 	 * @param msgId
-	 * @throws Exception  
+	 * @throws IOException  
 	 */
-	public MassResult deleteMass(int msgId) throws Exception {
+	public MassResult deleteMass(int msgId) throws IOException {
 		String json = "{\"msg_id\":" + msgId + "}";
 		JSONObject jsonObject = WechatHttpClientUtils
 			.post(MASS_DELETE_URL.replace("ACCESS_TOKEN", token), json);

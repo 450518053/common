@@ -1,6 +1,7 @@
 package com.tcc.common.wechat.material.client;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.springframework.util.CollectionUtils;
 
@@ -70,9 +71,9 @@ public class MaterialClient extends WechatClient {
 	 * 			图片仅支持jpg/png格式，大小必须在1MB以下
 	 * @param file
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public NewsImgUploadResult uploadNewsImg(File file) throws Exception {
+	public NewsImgUploadResult uploadNewsImg(File file) throws IOException {
 		//TODO 图片校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_IMG_URL.replace("ACCESS_TOKEN", token));
@@ -89,10 +90,10 @@ public class MaterialClient extends WechatClient {
 	 * @param file
 	 * @param type 除图文外
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public TempMaterialUploadResult uploadTempMaterial(	File file,
-														MaterialTypeEnums type) throws Exception {
+														MaterialTypeEnums type) throws IOException {
 		//TODO 校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_TEMP_MEDIA_URL.replace("ACCESS_TOKEN", token).replace("TYPE", type.code()));
@@ -110,9 +111,9 @@ public class MaterialClient extends WechatClient {
 	* 上传群发图文消息，临时的
 	* @param news
 	* @return mediaId
-	* @throws Exception 
+	* @throws IOException 
 	*/
-	public TempMaterialUploadResult uploadTempMaterial(News news) throws Exception {
+	public TempMaterialUploadResult uploadTempMaterial(News news) throws IOException {
 		Args.notNull(news, "news");
 		if (CollectionUtils.isEmpty(news.getArticles()) || news.getArticles().size() > 8) {
 			throw new IllegalArgumentException("图文消息支持1到8条图文 ");
@@ -135,10 +136,10 @@ public class MaterialClient extends WechatClient {
 	 * @param file
 	 * @param type 除图文外
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
 	public EternalMaterialUploadResult uploadEternalMaterial(	File file,
-																MaterialTypeEnums type) throws Exception {
+																MaterialTypeEnums type) throws IOException {
 		//TODO 校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_ETERNAL_MEDIA_URL.replace("ACCESS_TOKEN", token).replace("TYPE", type.code()));
@@ -154,9 +155,9 @@ public class MaterialClient extends WechatClient {
 	 * 上传永久图文消息
 	 * @param news
 	 * @return
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public EternalMaterialUploadResult uploadEternalMaterial(News news) throws Exception {
+	public EternalMaterialUploadResult uploadEternalMaterial(News news) throws IOException {
 		Args.notNull(news, "news");
 		if (CollectionUtils.isEmpty(news.getArticles()) || news.getArticles().size() > 8) {
 			throw new IllegalArgumentException("图文消息支持1到8条图文 ");
@@ -176,9 +177,9 @@ public class MaterialClient extends WechatClient {
 	 * 获取永久素材总数
 	 * 		图片和图文消息素材（包括单图文和多图文）的总数上限为5000，其他素材的总数上限为1000
 	 * @return
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public MaterialCountResult getAllMaterial() throws Exception {
+	public MaterialCountResult getAllMaterial() throws IOException {
 		JSONObject jsonObject = WechatHttpClientUtils
 			.get(All_MATERIAL_URL.replace("ACCESS_TOKEN", token));
 		MaterialCountResult result = new MaterialCountResult();
@@ -195,9 +196,9 @@ public class MaterialClient extends WechatClient {
 	 * 删除指定的永久素材，不抛异常视为操作成功
 	 * @param mediaId
 	 * @return
-	 * @throws Exception 
+	 * @throws IOException 
 	 */
-	public BaseResult deleteMedia(String mediaId) throws Exception {
+	public BaseResult deleteMedia(String mediaId) throws IOException {
 		Args.notBlank(mediaId, "mediaId");
 		JSONObject jsonObject = WechatHttpClientUtils.post(
 			DELETE_MEDIA_URL.replace("ACCESS_TOKEN", token), "{\"media_id\":\"" + mediaId + "\"}");

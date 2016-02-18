@@ -1,5 +1,7 @@
 package com.tcc.common.wechat.template.client;
 
+import java.io.IOException;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tcc.common.util.Args;
@@ -52,9 +54,9 @@ public class TemplateCilent extends WechatClient {
 	 * 发送模板消息
 	 * @param templateMessage
 	 * @return msgId
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public SendTempMesResult send(TemplateMessage templateMessage) throws Exception {
+	public SendTempMesResult send(TemplateMessage templateMessage) throws IOException {
 		Args.notNull(templateMessage, "templateMessage");
 		String jsonStr = JSON.toJSONString(templateMessage);
 		JSONObject jsonObject = WechatHttpClientUtils
@@ -71,8 +73,9 @@ public class TemplateCilent extends WechatClient {
 	 * 通过模板消息的编号获取模板消息的id
 	 * @param num
 	 * @return
+	 * @throws IOException
 	 */
-	public AcquireTempIdResult acquireIdByNum(String num) throws Exception {
+	public AcquireTempIdResult acquireIdByNum(String num) throws IOException {
 		Args.notBlank(num, "num");
 		JSONObject jsonObject = WechatHttpClientUtils.post(
 			GET_TEMID_URL.replace("ACCESS_TOKEN", token), GET_TEMID_JSON.replace("{NUM}", num));
@@ -88,9 +91,9 @@ public class TemplateCilent extends WechatClient {
 	 * 设置所属行业，最多两个行业，不抛异常视为设置成功
 	 * @param id1
 	 * @param id2
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	public SetIndustryResult setIndustry(String id1, String id2) throws Exception {
+	public SetIndustryResult setIndustry(String id1, String id2) throws IOException {
 		Args.notBlank(id1, "id1");
 		Args.notBlank(id2, "id2");
 		JSONObject jsonObject = WechatHttpClientUtils.post(

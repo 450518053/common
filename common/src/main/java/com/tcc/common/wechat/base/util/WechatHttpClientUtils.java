@@ -12,7 +12,7 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.tcc.common.httpclient.HttpClientUtils;
+import com.tcc.common.httpclient.HttpClientExecutor;
 import com.tcc.common.log.Logger;
 import com.tcc.common.log.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class WechatHttpClientUtils {
 	public static JSONObject post(String requestUrl, String outputStr) throws IOException {
 		long start = System.currentTimeMillis();
 		try {
-			return JSON.parseObject(HttpClientUtils.post(requestUrl, outputStr));
+			return JSON.parseObject(HttpClientExecutor.post(requestUrl, outputStr));
 		} finally {
 			if (IS_LOG) {
 				logger.info("post请求,执行时间'{}'毫秒,请求地址'{}',请求参数'{}'",
@@ -63,7 +63,7 @@ public class WechatHttpClientUtils {
 	public static JSONObject get(String requestUrl) throws IOException {
 		long start = System.currentTimeMillis();
 		try {
-			return JSON.parseObject(HttpClientUtils.get(requestUrl));
+			return JSON.parseObject(HttpClientExecutor.get(requestUrl));
 		} finally {
 			if (IS_LOG) {
 				logger.info("get请求,执行时间'{}'毫秒,请求地址'{}'", System.currentTimeMillis() - start,
@@ -82,7 +82,7 @@ public class WechatHttpClientUtils {
 	public static void download(File saveFile, String requestUrl) throws IOException {
 		long start = System.currentTimeMillis();
 		try {
-			HttpClientUtils.download(saveFile, requestUrl);
+			HttpClientExecutor.download(saveFile, requestUrl);
 		} finally {
 			if (IS_LOG) {
 				logger.info("下载文件,执行时间'{}'毫秒,请求地址'{}',文件路径'{}'", System.currentTimeMillis() - start,
@@ -115,8 +115,8 @@ public class WechatHttpClientUtils {
 		
 		long start = System.currentTimeMillis();
 		try {
-			return JSON.parseObject(
-				HttpClientUtils.post(httpPost, new ByteArrayEntity(packing(uploadFile, BOUNDARY))));
+			return JSON.parseObject(HttpClientExecutor.post(httpPost,
+				new ByteArrayEntity(packing(uploadFile, BOUNDARY))));
 		} finally {
 			if (IS_LOG) {
 				logger.info("上传文件,执行时间'{}'毫秒,请求地址'{}',文件路径'{}'", System.currentTimeMillis() - start,

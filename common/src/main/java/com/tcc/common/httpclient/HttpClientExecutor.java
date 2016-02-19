@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,17 +16,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
+import com.tcc.common.httpclient.support.HttpClientBuilder;
 import com.tcc.common.log.Logger;
 import com.tcc.common.log.LoggerFactory;
+import com.tcc.common.util.ShutdownHooks;
 import com.tcc.common.util.StringUtils;
 
 /**
  * 
- * @Filename HttpClientUtils.java
+ * @Filename HttpClientExecutor.java
  *
- * @Description httpClient工具类
+ * @Description HttpClient执行类
  * 					适用httpClient 4.5版本
  *
  * @author tan 2015年10月28日
@@ -33,23 +37,45 @@ import com.tcc.common.util.StringUtils;
  * @email 450518053@qq.com
  *
  */
-public class HttpClientUtils {
+public class HttpClientExecutor {
 	
-	/**
-	 * @see com.tcc.util.CloseableHttpClientInit#初始化
-	 */
-	private static CloseableHttpClient	client;
-										
+	private static boolean								shutdown		= false;;
+																		
+	private static CloseableHttpClient					client;
+														
+	private static PoolingHttpClientConnectionManager	connectionManage;
+														
 	/**
 	 * 默认编码
 	 */
-	private static final String			defaultCharset	= "utf-8";
-														
-	private static final Logger			logger			= LoggerFactory
-		.getLogger(HttpClientUtils.class);
+	private static final String							defaultCharset	= "utf-8";
+																		
+	private static final Logger							logger			= LoggerFactory
+		.getLogger(HttpClientExecutor.class);
 		
-	public static void setClient(CloseableHttpClient client) {
-		HttpClientUtils.client = client;
+	/**
+	 * 初始化，使用HttpClientUtils调用此方法
+	 * @param httpClientBuilder
+	 */
+	public static void initialize(HttpClientBuilder httpClientBuilder) {
+		if (client == null && connectionManage == null) {
+			client = httpClientBuilder.getClient();
+			connectionManage = httpClientBuilder.getConnectionManage();
+			new IdleConnectionClearTask().start();
+			ShutdownHooks.addShutdownHook(new Runnable() {
+				
+				public void run() {
+					try {
+						destory();
+					} catch (IOException e) {
+						logger.error("", e);
+					}
+					
+				}
+			}, "HttpClient销毁");
+		} else {
+			throw new IllegalArgumentException("不能重复初始化HttpClient");
+		}
 	}
 	
 	/**
@@ -205,6 +231,16 @@ public class HttpClientUtils {
 	}
 	
 	/**
+	 * 销毁
+	 * @throws IOException
+	 */
+	public static void destory() throws IOException {
+		connectionManage.close();
+		client.close();
+		shutdown = true;
+	}
+	
+	/**
 	 * @see org.apache.http.client.utils.HttpClientUtils#closeQuietly(HttpResponse)
 	 * @param response
 	 */
@@ -238,4 +274,39 @@ public class HttpClientUtils {
 		}
 		return charset;
 	}
+	
+	private static class IdleConnectionClearTask extends Thread {
+		
+		private long	housekeepingTimeout	= 30000;
+											
+		private long	closeIdleTimeout	= 120000;
+											
+		/**是否关闭过期连接*/
+		private boolean	closeExpired		= true;
+											
+		@Override
+		public void run() {
+			logger.info("开启-->关闭过期连接定时任务");
+			try {
+				while (!shutdown) {
+					synchronized (this) {
+						wait(housekeepingTimeout);
+						logger.info("关闭过期连接");
+						if (closeExpired) {
+							connectionManage.closeExpiredConnections();
+						}
+						if (closeIdleTimeout > 0) {
+							connectionManage.closeIdleConnections(closeIdleTimeout,
+								TimeUnit.MILLISECONDS);
+						}
+					}
+				}
+				logger.info("Httpclient关闭，终止关闭过期连接定时任务");
+			} catch (InterruptedException e) {
+				logger.error("关闭过期连接定时任务异常，终止该定时任务", e);
+			}
+		}
+		
+	}
+	
 }

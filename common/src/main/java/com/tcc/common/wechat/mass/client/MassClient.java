@@ -58,8 +58,8 @@ public class MassClient extends WechatClient {
 	 * @return
 	 * @throws IOException 
 	 */
-	public MassResult sendByGroup(	MassTypeEnums type, String groupId,
-									String content) throws IOException {
+	public MassResult sendByGroup(	final MassTypeEnums type, final String groupId,
+									final String content) throws IOException {
 		Args.notEmpty(content, "content");
 		GroupFilter filter = null;
 		if (StringUtils.isBlank(groupId)) {
@@ -86,8 +86,8 @@ public class MassClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public MassResult sendByOpenId(	MassTypeEnums type, List<String> openIdList,
-									String content) throws IOException {
+	public MassResult sendByOpenId(	final MassTypeEnums type, final List<String> openIdList,
+									final String content) throws IOException {
 		Args.notEmpty(content, "content");
 		Args.notEmpty(openIdList, "openIdList");
 		if (openIdList.size() < 2) {
@@ -112,8 +112,8 @@ public class MassClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public MassResult preview(	MassTypeEnums type, String openId,
-								String content) throws IOException {
+	public MassResult preview(	final MassTypeEnums type, final String openId,
+								final String content) throws IOException {
 		Args.notEmpty(content, "content");
 		Args.notEmpty(openId, "openId");
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -136,7 +136,7 @@ public class MassClient extends WechatClient {
 	 * @param msgId
 	 * @throws IOException  
 	 */
-	public MassResult deleteMass(int msgId) throws IOException {
+	public MassResult deleteMass(final int msgId) throws IOException {
 		String json = "{\"msg_id\":" + msgId + "}";
 		JSONObject jsonObject = WechatHttpClientUtils
 			.post(MASS_DELETE_URL.replace("ACCESS_TOKEN", token), json);

@@ -73,7 +73,7 @@ public class MaterialClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public NewsImgUploadResult uploadNewsImg(File file) throws IOException {
+	public NewsImgUploadResult uploadNewsImg(final File file) throws IOException {
 		//TODO 图片校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_IMG_URL.replace("ACCESS_TOKEN", token));
@@ -92,8 +92,8 @@ public class MaterialClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public TempMaterialUploadResult uploadTempMaterial(	File file,
-														MaterialTypeEnums type) throws IOException {
+	public TempMaterialUploadResult uploadTempMaterial(	final File file,
+														final MaterialTypeEnums type) throws IOException {
 		//TODO 校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_TEMP_MEDIA_URL.replace("ACCESS_TOKEN", token).replace("TYPE", type.code()));
@@ -113,7 +113,7 @@ public class MaterialClient extends WechatClient {
 	* @return mediaId
 	* @throws IOException 
 	*/
-	public TempMaterialUploadResult uploadTempMaterial(News news) throws IOException {
+	public TempMaterialUploadResult uploadTempMaterial(final News news) throws IOException {
 		Args.notNull(news, "news");
 		if (CollectionUtils.isEmpty(news.getArticles()) || news.getArticles().size() > 8) {
 			throw new IllegalArgumentException("图文消息支持1到8条图文 ");
@@ -138,8 +138,8 @@ public class MaterialClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public EternalMaterialUploadResult uploadEternalMaterial(	File file,
-																MaterialTypeEnums type) throws IOException {
+	public EternalMaterialUploadResult uploadEternalMaterial(	final File file,
+																final MaterialTypeEnums type) throws IOException {
 		//TODO 校验
 		JSONObject jsonObject = WechatHttpClientUtils.uploadMedia(file,
 			UPLOAD_ETERNAL_MEDIA_URL.replace("ACCESS_TOKEN", token).replace("TYPE", type.code()));
@@ -157,7 +157,7 @@ public class MaterialClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public EternalMaterialUploadResult uploadEternalMaterial(News news) throws IOException {
+	public EternalMaterialUploadResult uploadEternalMaterial(final News news) throws IOException {
 		Args.notNull(news, "news");
 		if (CollectionUtils.isEmpty(news.getArticles()) || news.getArticles().size() > 8) {
 			throw new IllegalArgumentException("图文消息支持1到8条图文 ");
@@ -198,7 +198,7 @@ public class MaterialClient extends WechatClient {
 	 * @return
 	 * @throws IOException 
 	 */
-	public BaseResult deleteMedia(String mediaId) throws IOException {
+	public BaseResult deleteMedia(final String mediaId) throws IOException {
 		Args.notBlank(mediaId, "mediaId");
 		JSONObject jsonObject = WechatHttpClientUtils.post(
 			DELETE_MEDIA_URL.replace("ACCESS_TOKEN", token), "{\"media_id\":\"" + mediaId + "\"}");

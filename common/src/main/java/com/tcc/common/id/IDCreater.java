@@ -62,7 +62,7 @@ public class IDCreater {
 	 * 添加20位时间
 	 * @param idBuilder
 	 */
-	private static void appendTime(StringBuilder idBuilder) {
+	private static void appendTime(final StringBuilder idBuilder) {
 		Date now = new Date();
 		//1.获取时间标识
 		long time = createTime(now.getTime());
@@ -87,7 +87,7 @@ public class IDCreater {
 	 * @param currentTimeMillis 当前毫秒时间
 	 * @return 时间标识
 	 */
-	private static long createTime(long currentTimeMillis) {
+	private static long createTime(final long currentTimeMillis) {
 		long timeMillis = currentTimeMillis * COUNT_IN_MILL_SECOND;
 		while (true) {
 			long last = lastTime.get();

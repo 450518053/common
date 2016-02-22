@@ -56,7 +56,7 @@ public class TemplateCilent extends WechatClient {
 	 * @return msgId
 	 * @throws IOException
 	 */
-	public SendTempMesResult send(TemplateMessage templateMessage) throws IOException {
+	public SendTempMesResult send(final TemplateMessage templateMessage) throws IOException {
 		Args.notNull(templateMessage, "templateMessage");
 		String jsonStr = JSON.toJSONString(templateMessage);
 		JSONObject jsonObject = WechatHttpClientUtils
@@ -75,7 +75,7 @@ public class TemplateCilent extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public AcquireTempIdResult acquireIdByNum(String num) throws IOException {
+	public AcquireTempIdResult acquireIdByNum(final String num) throws IOException {
 		Args.notBlank(num, "num");
 		JSONObject jsonObject = WechatHttpClientUtils.post(
 			GET_TEMID_URL.replace("ACCESS_TOKEN", token), GET_TEMID_JSON.replace("{NUM}", num));
@@ -93,7 +93,7 @@ public class TemplateCilent extends WechatClient {
 	 * @param id2
 	 * @throws IOException
 	 */
-	public SetIndustryResult setIndustry(String id1, String id2) throws IOException {
+	public SetIndustryResult setIndustry(final String id1, final String id2) throws IOException {
 		Args.notBlank(id1, "id1");
 		Args.notBlank(id2, "id2");
 		JSONObject jsonObject = WechatHttpClientUtils.post(

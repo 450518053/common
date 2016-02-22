@@ -36,7 +36,7 @@ public abstract class WechatClient {
 	 * @param jsonObject
 	 * @return 
 	 */
-	protected boolean analyErrcode(BaseResult result, JSONObject jsonObject) {
+	protected boolean analyErrcode(final BaseResult result, final JSONObject jsonObject) {
 		result.setRetVal(jsonObject.toJSONString());
 		int errcode = jsonObject.getIntValue("errcode");
 		if (errcode == 0) {

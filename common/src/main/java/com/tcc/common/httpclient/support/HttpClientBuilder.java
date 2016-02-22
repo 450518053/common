@@ -71,7 +71,7 @@ public class HttpClientBuilder {
 	* 	确保HttpClientBuilder中PoolingHttpClientConnectionManager，CloseableHttpClient只被初始化一次
 	* @return
 	*/
-	public static HttpClientBuilder getInstance(BuilderParam builderParam) {
+	public static HttpClientBuilder getInstance(final BuilderParam builderParam) {
 		if (httpClientBuilder == null) {
 			httpClientBuilder = new HttpClientBuilder(builderParam.getDefaultSocketTimeout(),
 				builderParam.getDefaultConnectTimeout(),
@@ -96,11 +96,12 @@ public class HttpClientBuilder {
 	 * @param retryHandler
 	 * @param keepAliveStrategy
 	 */
-	private HttpClientBuilder(	int defaultSocketTimeout, int defaultConnectTimeout,
-								int defaultConnectionRequestTimeout, int defaultMaxTotal,
-								int defaultMaxPerRoute, int defaultKeepAliveTime,
-								HttpRequestRetryHandler retryHandler,
-								ConnectionKeepAliveStrategy keepAliveStrategy) {
+	private HttpClientBuilder(	final int defaultSocketTimeout, final int defaultConnectTimeout,
+								final int defaultConnectionRequestTimeout,
+								final int defaultMaxTotal, final int defaultMaxPerRoute,
+								final int defaultKeepAliveTime,
+								final HttpRequestRetryHandler retryHandler,
+								final ConnectionKeepAliveStrategy keepAliveStrategy) {
 		this.defaultSocketTimeout = defaultSocketTimeout > 0 ? defaultSocketTimeout : 15000;
 		this.defaultConnectTimeout = defaultConnectTimeout > 0 ? defaultConnectTimeout : 15000;
 		this.defaultConnectionRequestTimeout = defaultConnectionRequestTimeout > 0

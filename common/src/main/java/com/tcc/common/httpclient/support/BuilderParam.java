@@ -16,22 +16,22 @@ import org.apache.http.conn.ConnectionKeepAliveStrategy;
 public class BuilderParam {
 	
 	/**请求超时*/
-	private int							defaultSocketTimeout;
+	private final int					defaultSocketTimeout;
 										
 	/**连接超时*/
-	private int							defaultConnectTimeout;
+	private final int					defaultConnectTimeout;
 										
 	/**从连接池中取连接的超时时间*/
-	private int							defaultConnectionRequestTimeout;
+	private final int					defaultConnectionRequestTimeout;
 										
 	/**总最大连接*/
-	private int							defaultMaxTotal;
+	private final int					defaultMaxTotal;
 										
 	/**最大路由*/
-	private int							defaultMaxPerRoute;
+	private final int					defaultMaxPerRoute;
 										
 	/**keep-alive策略中关闭连接时间*/
-	private int							defaultKeepAliveTime;
+	private final int					defaultKeepAliveTime;
 										
 	/**重试处理程序*/
 	private HttpRequestRetryHandler		retryHandler;
@@ -48,9 +48,9 @@ public class BuilderParam {
 	 * @param defaultMaxPerRoute
 	 * @param defaultKeepAliveTime
 	 */
-	public BuilderParam(int defaultSocketTimeout, int defaultConnectTimeout,
-						int defaultConnectionRequestTimeout, int defaultMaxTotal,
-						int defaultMaxPerRoute, int defaultKeepAliveTime) {
+	public BuilderParam(final int defaultSocketTimeout, final int defaultConnectTimeout,
+						final int defaultConnectionRequestTimeout, final int defaultMaxTotal,
+						final int defaultMaxPerRoute, final int defaultKeepAliveTime) {
 		super();
 		this.defaultSocketTimeout = defaultSocketTimeout;
 		this.defaultConnectTimeout = defaultConnectTimeout;
@@ -58,36 +58,6 @@ public class BuilderParam {
 		this.defaultMaxTotal = defaultMaxTotal;
 		this.defaultMaxPerRoute = defaultMaxPerRoute;
 		this.defaultKeepAliveTime = defaultKeepAliveTime;
-	}
-	
-	public BuilderParam setDefaultSocketTimeout(int defaultSocketTimeout) {
-		this.defaultSocketTimeout = defaultSocketTimeout;
-		return this;
-	}
-	
-	public BuilderParam setDefaultConnectTimeout(int defaultConnectTimeout) {
-		this.defaultConnectTimeout = defaultConnectTimeout;
-		return this;
-	}
-	
-	public BuilderParam setDefaultConnectionRequestTimeout(int defaultConnectionRequestTimeout) {
-		this.defaultConnectionRequestTimeout = defaultConnectionRequestTimeout;
-		return this;
-	}
-	
-	public BuilderParam setDefaultMaxTotal(int defaultMaxTotal) {
-		this.defaultMaxTotal = defaultMaxTotal;
-		return this;
-	}
-	
-	public BuilderParam setDefaultMaxPerRoute(int defaultMaxPerRoute) {
-		this.defaultMaxPerRoute = defaultMaxPerRoute;
-		return this;
-	}
-	
-	public BuilderParam setDefaultKeepAliveTime(int defaultKeepAliveTime) {
-		this.defaultKeepAliveTime = defaultKeepAliveTime;
-		return this;
 	}
 	
 	public BuilderParam setRetryHandler(HttpRequestRetryHandler retryHandler) {

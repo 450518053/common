@@ -37,7 +37,7 @@ public class QrCodeClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public AcquireTicketResult acquireTicket(String scene) throws IOException {
+	public AcquireTicketResult acquireTicket(final String scene) throws IOException {
 		Args.notBlank(scene, "scene");
 		JSONObject jsonObject = WechatHttpClientUtils.post(QRCODE_CREATE_URL,
 			QRCODE_CREATE_JSON.replace("{SCENE}", scene));
@@ -58,7 +58,7 @@ public class QrCodeClient extends WechatClient {
 	 * @return
 	 * @throws IOException 
 	 */
-	public void downQrCode(File saveFile, String ticket) throws IOException {
+	public void downQrCode(final File saveFile, final String ticket) throws IOException {
 		WechatHttpClientUtils.download(saveFile, ticket);
 	}
 }

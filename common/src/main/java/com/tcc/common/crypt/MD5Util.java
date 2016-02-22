@@ -2,7 +2,6 @@ package com.tcc.common.crypt;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +38,7 @@ public class MD5Util {
 	 * @return md5串
 	 * @throws Exception 
 	 */
-	public static String md5(File f) throws Exception {
+	public static String md5(final File f) throws IOException {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(f);
@@ -50,17 +49,9 @@ public class MD5Util {
 				md.update(buffer, 0, length);
 			}
 			return new String(Hex.encodeHex(md.digest()));
-		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException("计算文件MD5值异常,未找到文件'" + f.getAbsolutePath() + "'");
-		} catch (Exception e) {
-			throw new Exception("计算文件MD5值异常", e);
 		} finally {
-			try {
-				if (fis != null)
-					fis.close();
-			} catch (IOException e) {
-				throw new IOException("计算文件MD5值关闭流异常", e);
-			}
+			if (fis != null)
+				fis.close();
 		}
 	}
 	
@@ -69,7 +60,7 @@ public class MD5Util {
 	 * @param target 字符串
 	 * @return md5 value
 	 */
-	public static String md5(String target) {
+	public static String md5(final String target) {
 		return DigestUtils.md5Hex(target);
 	}
 	

@@ -33,7 +33,7 @@ public class MenuClient extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public BaseResult createMenu(Menu menu) throws IOException {
+	public BaseResult createMenu(final Menu menu) throws IOException {
 		Args.notNull(menu, "menu");
 		String jsonStr = JSON.toJSONString(menu);
 		JSONObject jsonObject = WechatHttpClientUtils

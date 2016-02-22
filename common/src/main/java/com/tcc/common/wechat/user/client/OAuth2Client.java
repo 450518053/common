@@ -42,7 +42,7 @@ public class OAuth2Client extends WechatClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public OAuth2Result getByCode(String code) throws IOException {
+	public OAuth2Result getByCode(final String code) throws IOException {
 		Args.notBlank(code, "code");
 		JSONObject jsonObject = WechatHttpClientUtils
 			.get(GET_OPENID_BY_CODE_URL.replace("CODE", code));
@@ -65,7 +65,8 @@ public class OAuth2Client extends WechatClient {
 	 * @param state 重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节 
 	 * @return
 	 */
-	public String transURL(ScopeTypeEnums scopeTypeEnums, String redirectURI, String state) {
+	public String transURL(	final ScopeTypeEnums scopeTypeEnums, final String redirectURI,
+							final String state) {
 		Args.notBlank(redirectURI, "redirectURI");
 		String newURI = null;
 		try {
@@ -85,7 +86,7 @@ public class OAuth2Client extends WechatClient {
 	 * @param redirectURI 授权后重定向的回调链接地址，包括http://或者https://
 	 * @return
 	 */
-	public String transURL(ScopeTypeEnums scopeTypeEnums, String redirectURI) {
+	public String transURL(final ScopeTypeEnums scopeTypeEnums, final String redirectURI) {
 		return transURL(scopeTypeEnums, redirectURI, null);
 	}
 }

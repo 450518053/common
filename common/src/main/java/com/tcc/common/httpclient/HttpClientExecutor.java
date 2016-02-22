@@ -39,8 +39,6 @@ import com.tcc.common.util.StringUtils;
  */
 public class HttpClientExecutor {
 	
-	private static boolean								shutdown		= false;;
-																		
 	private static CloseableHttpClient					client;
 														
 	private static PoolingHttpClientConnectionManager	connectionManage;
@@ -61,11 +59,15 @@ public class HttpClientExecutor {
 		if (client == null && connectionManage == null) {
 			client = httpClientBuilder.getClient();
 			connectionManage = httpClientBuilder.getConnectionManage();
-			new IdleConnectionClearTask().start();
+			//清理连接线程开启
+			final IdleConnectionClearTask task = new IdleConnectionClearTask();
+			task.start();
+			//HttpClient销毁添加到系统钩子
 			ShutdownHooks.addShutdownHook(new Runnable() {
 				
 				public void run() {
 					try {
+						task.shutdown();
 						destory();
 					} catch (IOException e) {
 						logger.error("", e);
@@ -85,7 +87,7 @@ public class HttpClientExecutor {
 	 * @return utf-8编码字符串
 	 * @throws IOException 
 	 */
-	public static String post(String requestUrl, byte[] bytes) throws IOException {
+	public static String post(final String requestUrl, final byte[] bytes) throws IOException {
 		ByteArrayEntity byteEntity = new ByteArrayEntity(bytes);
 		return post(new HttpPost(requestUrl), byteEntity, defaultCharset);
 	}
@@ -97,7 +99,7 @@ public class HttpClientExecutor {
 	 * @return utf-8编码字符串
 	 * @throws IOException 
 	 */
-	public static String post(String requestUrl, String outputStr) throws IOException {
+	public static String post(final String requestUrl, final String outputStr) throws IOException {
 		StringEntity stringEntity = null;
 		if (outputStr != null) {
 			stringEntity = new StringEntity(outputStr, defaultCharset);
@@ -111,7 +113,7 @@ public class HttpClientExecutor {
 	 * @param params 内容
 	 * @throws IOException 
 	 */
-	public static String post(HttpPost httpPost, HttpEntity params) throws IOException {
+	public static String post(final HttpPost httpPost, final HttpEntity params) throws IOException {
 		return post(httpPost, params, defaultCharset);
 	}
 	
@@ -122,15 +124,15 @@ public class HttpClientExecutor {
 	 * @return 指定charset编码字符串
 	 * @throws IOException 
 	 */
-	public static String post(	HttpPost httpPost, HttpEntity params,
-								String charset) throws IOException {
+	public static String post(	final HttpPost httpPost, final HttpEntity params,
+								final String charset) throws IOException {
 		HttpEntity entity = null;
 		httpPost.setEntity(params);
 		CloseableHttpResponse httpResponse = null;
 		try {
 			httpResponse = client.execute(httpPost);
 			entity = httpResponse.getEntity();
-			return EntityUtils.toString(entity, charset);
+			return EntityUtils.toString(entity, checkCharset(charset));
 		} catch (IOException e) {
 			logger.error("发起post请求异常,请求地址'{}',请求参数'{}'" + ",'{}'", httpPost.getURI().toString(),
 				params.toString(), getResponseMess(httpResponse), e);
@@ -146,7 +148,7 @@ public class HttpClientExecutor {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String get(String requestUrl) throws IOException {
+	public static String get(final String requestUrl) throws IOException {
 		return get(new HttpGet(requestUrl), defaultCharset);
 	}
 	
@@ -156,7 +158,7 @@ public class HttpClientExecutor {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String get(HttpGet httpGet) throws IOException {
+	public static String get(final HttpGet httpGet) throws IOException {
 		return get(httpGet, defaultCharset);
 	}
 	
@@ -167,14 +169,13 @@ public class HttpClientExecutor {
 	 * @return
 	 * @throws IOException 
 	 */
-	public static String get(HttpGet httpGet, String charset) throws IOException {
-		charset = checkCharset(charset);
+	public static String get(final HttpGet httpGet, final String charset) throws IOException {
 		HttpEntity entity = null;
 		CloseableHttpResponse httpResponse = null;
 		try {
 			httpResponse = client.execute(httpGet);
 			entity = httpResponse.getEntity();
-			return EntityUtils.toString(entity, charset);
+			return EntityUtils.toString(entity, checkCharset(charset));
 		} catch (IOException e) {
 			logger.error("发起get请求异常,请求地址'{}','{}'", httpGet.getURI().toString(),
 				getResponseMess(httpResponse), e);
@@ -191,7 +192,7 @@ public class HttpClientExecutor {
 	 * @return 
 	 * @throws IOException 
 	 */
-	public static void download(File saveFile, String requestUrl) throws IOException {
+	public static void download(final File saveFile, final String requestUrl) throws IOException {
 		CloseableHttpResponse httpResponse = null;
 		HttpEntity entity = null;
 		InputStream in = null;
@@ -237,7 +238,6 @@ public class HttpClientExecutor {
 	public static void destory() throws IOException {
 		connectionManage.close();
 		client.close();
-		shutdown = true;
 	}
 	
 	/**
@@ -260,7 +260,7 @@ public class HttpClientExecutor {
 	 * 获取httpResponse状态码及消息头
 	 * @return
 	 */
-	private static String getResponseMess(HttpResponse httpResponse) {
+	private static String getResponseMess(final HttpResponse httpResponse) {
 		if (httpResponse != null) {
 			return "状态码:"+ httpResponse.getStatusLine() + ",消息头:"
 					+ Arrays.toString(httpResponse.getAllHeaders());
@@ -268,22 +268,24 @@ public class HttpClientExecutor {
 		return "httpResponse=null";
 	}
 	
-	private static String checkCharset(String charset) {
+	private static String checkCharset(final String charset) {
 		if (StringUtils.isBlank(charset)) {
-			charset = defaultCharset;
+			return defaultCharset;
 		}
 		return charset;
 	}
 	
 	private static class IdleConnectionClearTask extends Thread {
 		
-		private long	housekeepingTimeout	= 30000;
-											
-		private long	closeIdleTimeout	= 120000;
-											
+		private volatile boolean	shutdown			= false;
+														
+		private long				housekeepingTimeout	= 30000;
+														
+		private long				closeIdleTimeout	= 120000;
+														
 		/**是否关闭过期连接*/
-		private boolean	closeExpired		= true;
-											
+		private boolean				closeExpired		= true;
+														
 		@Override
 		public void run() {
 			logger.info("开启-->关闭过期连接定时任务");
@@ -291,7 +293,6 @@ public class HttpClientExecutor {
 				while (!shutdown) {
 					synchronized (this) {
 						wait(housekeepingTimeout);
-						logger.info("关闭过期连接");
 						if (closeExpired) {
 							connectionManage.closeExpiredConnections();
 						}
@@ -301,12 +302,18 @@ public class HttpClientExecutor {
 						}
 					}
 				}
-				logger.info("Httpclient关闭，终止关闭过期连接定时任务");
+				logger.info("Httpclient关闭，终止->关闭过期连接定时任务");
 			} catch (InterruptedException e) {
 				logger.error("关闭过期连接定时任务异常，终止该定时任务", e);
 			}
 		}
 		
+		public void shutdown() {
+			shutdown = true;
+			synchronized (this) {
+				notifyAll();
+			}
+		}
 	}
 	
 }

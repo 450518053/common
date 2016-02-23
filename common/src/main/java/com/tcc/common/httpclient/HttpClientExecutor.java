@@ -55,7 +55,7 @@ public class HttpClientExecutor {
 	 * 初始化，使用HttpClientUtils调用此方法
 	 * @param httpClientBuilder
 	 */
-	public static void initialize(HttpClientBuilder httpClientBuilder) {
+	public static void initialize(final HttpClientBuilder httpClientBuilder) {
 		if (client == null && connectionManage == null) {
 			client = httpClientBuilder.getClient();
 			connectionManage = httpClientBuilder.getConnectionManage();
